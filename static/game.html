@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A game where you come up with words from letters given in a prompt.">
+  <meta name="keywords" content="word, game, lexicon, dictionary, vocabulary, English, noun">
+  <title>ReNoun - Playing</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="/game.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"> </script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script defer src="./game.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container is-max-desktop mb-4">
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <div class="navbar-item">
+            <div class="home-link is-clickable">
+              <span class="icon-text">
+                <span class="icon is-medium has-text-dark">
+                  <i class="fas fa-feather-alt fa-lg"></i>
+                </span>
+              </span>
+  
+              <span class="title has-text-link has-text-weight-semibold">
+                ReNoun
+              </span>
+  
+              <span class="heading">
+                The Word Game
+              </span>
+            </div>
+          </div>
+      
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="loggedInNavbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+      
+        <div id="loggedInNavbar" class="navbar-menu">
+          <div class="navbar-start is-hidden">
+
+            <!-- <div class="play-div navbar-item">
+              <a class="play-game-button button is-primary is-outlined" title="Play">
+                <span class="icon is-medium">
+                  <i class="fas fa-gamepad"></i>
+                </span>
+  
+                <span>Play</span>
+              </a>
+            </div> -->
+  
+            <div class="stats-div navbar-item">
+              <a class="stats-anchor button is-outlined" title="Stats" href="/stats">
+                <span class="icon is-medium">
+                  <i class="fas fa-chart-bar"></i>
+                </span>
+  
+                <span>Stats</span>
+              </a>
+            </div>
+  
+            <div class="vocab-div navbar-item">
+              <a class="vocab-anchor button is-outlined" title="Vocab" href="/vocab">
+                <span class="icon is-medium">
+                  <i class="fas fa-book"></i>
+                </span>
+  
+                <span>Vocab</span>
+              </a>
+            </div>
+  
+            <div class="logout-div navbar-item">
+              <a class="logout-anchor button is-outlined" title="Log out">
+                <span class="icon is-medium">
+                  <i class="fas fa-door-open"></i>
+                </span>
+  
+                <span>Log out</span>
+              </a>
+            </div>
+          </div>
+      
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <p class="github">
+                <a href="https://github.com/yevgeniyakimenko" class="github">
+                  <span class="icon-text has-text-grey-darker" title="Source code on GitHub">
+                    <span class="icon is-medium">
+                      <i class="fab fa-github-alt fa-lg"></i>
+                    </span>
+                  </span>
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="new-game-prompt section py-0">
+      <div class="container is-max-desktop">
+        <div class="columns">
+          <div class="column is-8 is-offset-2 is-centered py-0">
+            <div class="card">
+              <div class="card-content">
+                <div class="block">
+                  <p class="is-size-5">How to play</p>
+                </div>
+
+                <div class="block">
+                  You will be given a big noun. Your goal is to make smaller nouns
+                  using the letters of the big one.
+                </div>
+
+                <div class="block content">
+                  When the game starts:
+                  <ol>
+                    <li>
+                      Make a smaller word by clicking or tapping the letter buttons on the screen, or by tapping on your keyboard.
+                    </li>
+                    <li>
+                      Submit your word by clicking or tapping the "Submit" button or hitting <kbd>Enter</kbd>.
+                    </li>
+                  </ol>
+                </div>
+
+                <div class="block">
+                  Longer words give you a higher score. Some task words are harder than others. 
+                  Can you score 1000 points in a game?
+                </div>
+
+                <div class="block">
+                  <p>
+                    <button class="start-game-button button is-outlined is-primary">Start</button>
+                  </p>
+                </div>
+      
+                <div class="block">
+                  <div class="content ">
+                    <dl>
+                      <dt class="noun-definition">
+                        <span class="expand-icon icon-text">
+                          <span class="is-size-5">
+                            <dfn class="has-text-weight-semibold">noun:</dfn>
+                          </span>
+                        </span>
+                      </dt>
+  
+                      <dd class="">
+                        a word that is the name of something (such as a person, animal, 
+                        place, thing, quality, idea, or action) and is typically used 
+                        in a sentence as subject or object of a verb or as object of 
+                        a preposition (Merriam-Webster Learner's Dictionary).
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="active-game-section section p-0 mb-4 is-hidden">
+      <div class="container is-max-desktop">
+        <div class="column">
+          <div class="progress-div columns is-mobile">
+            <div class="column is-narrow is-mobile-2 pr-0">
+              <p class="countdown has-text-right is-size-7 has-text-weight-semibold is-family-monospace"></p>
+            </div>
+
+            <div class="column is-flex is-align-items-center">
+              <progress class="game-progress progress is-small is-link" value="120"
+                max="120"></progress>
+            </div>
+          </div>
+
+          <div class="play-controls-div block">
+            <div 
+              class="new-score-div is-flex is-align-items-center is-justify-content-center animate__animated is-hidden">
+              <p 
+                class="new-score-para is-size-2 has-text-primary has-text-weight-semibold has-text-centered"></p>
+            </div>
+
+            <div 
+              class="loading-div is-flex is-align-items-center is-justify-content-center animate__animated is-hidden">
+              <button class="loading-button button is-text is-outlined is-inverted is-loading is-size-1">
+                <span class="loading-button-span">loading</span>
+              </button>
+            </div>
+            
+
+            <div class="columns is-flex is-justify-content-end mb-0">
+              <div class="column subtitle py-1 mb-1">
+                <p>The big noun is:
+                  <span 
+                    class="task-word has-text-weight-semibold is-family-monospace">
+                  </span>
+                </p>
+              </div>
+
+              <div class="column subtitle is-narrow is-narrow-mobile py-1">
+                <div class="content">
+                  <p class="recreate-score-para animate__animated">
+                    Score: 
+                    <span class="recreate-score has-text-success has-text-weight-semibold">
+                      0
+                    </span>
+                  </p>
+                </div>
+                
+              </div>
+            </div>
+            
+
+            <div class="columns is-mobile is-variable is-1 mb-0">
+              <div class="column">
+                <input class="input recreate-input is-focused is-family-monospace" type="text" readonly>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-light backspace">
+                  <span class="icon">
+                    <i class="fas fa-backspace"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="task-block block mb-2"></div>
+          
+            
+          
+            <div class="block mt-2">
+              <button class="submit-button button is-link is-outlined">
+                Submit
+              </button>
+            </div>
+          </div>
+
+          <div class="result-box box is-hidden">
+            <div class="block has-text-centered is-size-4">
+              Time's up!
+            </div>
+  
+            <div class="game-result-div block has-text-centered animate__animated">
+              You've scored 
+              <span class="total-score-span has-text-weight-semibold has-text-primary"></span> 
+              points with <span class="total-words-span has-text-weight-semibold"></span> words!
+            </div>
+  
+            <div class="block has-text-centered is-size-5">
+              Play again?
+            </div>
+  
+            <div class="block has-text-centered">
+              <button class="play-again-button button is-outlined is-link">Yes!</button>
+            </div>
+          </div>
+
+          <div class="submitted-words-div block">
+            <div class="box">
+              <div class="columns">
+                <div class="column is-half">
+                  <div class="block mb-2">
+                    <p class="subtitle">Submitted words:</p>
+                  </div>
+    
+                  <div class="block subbed-word-list">
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="help-modal modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <div class="block">
+            You are given a big noun. Your goal is to make smaller nouns
+            using the letters of the big one. Tap or click the buttons
+            with letters. The timer will be set to 2 minutes. Longer words give 
+            you a higher score.
+          </div>
+
+          <div class="block">
+            <dfn class="has-text-weight-semibold">noun</dfn>:
+            a word that is the name of something (such as a person, animal, 
+            place, thing, quality, idea, or action) and is typically used 
+            in a sentence as subject or object of a verb or as object of 
+            a preposition (Merriam-Webster Learner's Dictionary).
+          </div>
+
+          <div class="block has-text-centered">
+            <button class="ok-button button is-outlined is-link">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+  </footer>
+
+</body>
+</html>

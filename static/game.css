@@ -1,0 +1,17 @@
+.loading-div {
+  z-index: 2;
+  position:absolute;
+  top: calc(25% - 30px);
+  left: calc(50% - 125px);
+  height: 60px;
+  width: 250px;
+}
+
+.new-score-div {
+  z-index: 2;
+  position:absolute;
+  top: calc(25% - 30px);
+  left: calc(50% - 125px);
+  height: 60px;
+  width: 250px;
+}

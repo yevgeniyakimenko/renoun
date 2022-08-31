@@ -1,0 +1,5 @@
+node_modules/
+static/unused/
+helpers/unused/
+helpers/toReview.txt
+.env
