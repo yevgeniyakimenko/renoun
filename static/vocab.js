@@ -1,4 +1,6 @@
 const playGameButton = document.querySelector('.play-game-button');
+const navBarBurger = document.querySelector('.navbar-burger');
+const navBarMenu = document.querySelector('.navbar-menu');
 const logOutAnchor = document.querySelector('.logout-anchor');
 
 const vocabHeading = document.querySelector('.vocab-heading');
@@ -165,6 +167,12 @@ if (isLoggedIn) {
     .catch((error) => console.log(error));
   });
 }
+
+navBarBurger.addEventListener('click', (event) => {
+  event.preventDefault();
+  navBarBurger.classList.toggle('is-active');
+  navBarMenu.classList.toggle('is-active');
+});
 
 playGameButton.addEventListener('click', (event) => {
   event.preventDefault();

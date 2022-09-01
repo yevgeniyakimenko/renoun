@@ -1,4 +1,6 @@
 const newGamePrompt = document.querySelector('.new-game-prompt');
+const navBarBurger = document.querySelector('.navbar-burger');
+const navBarMenu = document.querySelector('.navbar-menu');
 const activeGameSection = document.querySelector('.active-game-section');
 const startGameButton = document.querySelector('.start-game-button');
 
@@ -217,6 +219,12 @@ if (isLoggedIn) {
     .catch((error) => console.log(error));
   });
 }
+
+navBarBurger.addEventListener('click', (event) => {
+  event.preventDefault();
+  navBarBurger.classList.toggle('is-active');
+  navBarMenu.classList.toggle('is-active');
+});
 
 startGameButton.focus();
 

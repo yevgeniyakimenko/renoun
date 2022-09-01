@@ -1,5 +1,9 @@
 import * as mysql from 'mysql2/promise';
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 const dbConfigLocal = {
   host: "localhost",
   user: "adbmin",
