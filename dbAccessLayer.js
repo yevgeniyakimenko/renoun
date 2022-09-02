@@ -90,7 +90,7 @@ export async function updateStats(username, wordList) {
   let gameScore = 0;
 
   for (const word in wordList) {
-    if (!longestWord || word.length > longestWord.length) {
+    if (!longestWord || word.length >= longestWord.length) {
       longestWord = word;
     }
 

@@ -61,7 +61,7 @@ function showStats(response) {
       value: avgWords,
     },
     {
-      label: 'Longest word submitted',
+      label: 'Longest word submitted most recently',
       value: longestWord,
     },
   ];
