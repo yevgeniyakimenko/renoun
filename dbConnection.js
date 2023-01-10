@@ -19,9 +19,10 @@ const dbConfigOnline = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DBNAME,
+  port: process.env.DB_PORT,
   multipleStatements: false,
   namedPlaceholders: true,
-  connectionLimit: 5,
+  connectionLimit: 4,
 };
 
 const dbConfig = process.env.IS_ONLINE ? dbConfigOnline : dbConfigLocal;

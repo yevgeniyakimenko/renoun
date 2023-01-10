@@ -206,7 +206,7 @@ export async function getVocab(data) {
   } finally {
     if (conn) await conn.release();
   }
-}
+};
 
 export async function addWordsToVocab(username, wordList) {
   const vocabQuery = 'INSERT INTO user_word (user_id, word_id, times_used) VALUES ((SELECT user_id FROM user WHERE username = :username), (SELECT word_id FROM word WHERE word_entry = :word), 1) ON DUPLICATE KEY UPDATE times_used = times_used + 1;';
@@ -229,4 +229,4 @@ export async function addWordsToVocab(username, wordList) {
   } finally {
     if (conn) await conn.release();
   }
-}
+};
