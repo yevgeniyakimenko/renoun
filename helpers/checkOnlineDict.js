@@ -23,7 +23,10 @@ export async function checkWordInOnlineDict(word) {
     // check Learner's
     const learnArr = await axios.get(learnerQuery);
     for (const res of learnArr.data) {
-      if (res.hwi && res.hwi.hw === word && res.fl && res.fl === 'noun') {
+      // res.hwi contains headword information
+      // res.hwi.hw contains the headword, which may be split with '*' denoting the stressed syllable
+      // res.fl contains the part of speech
+      if (res.hwi && res.hwi.hw.split('*').join('') === word && res.fl && res.fl === 'noun') {
         let plural = false;
         // check sls (subject status label) whether the word is only a plural form
         if (res.sls) {
@@ -106,7 +109,7 @@ export async function checkWordInOnlineDict(word) {
               defArr.push(definition.definition);
             }
             const wordStr = word + '\n' + defArr.join('\n') + '\n\n';
-            // await fs.appendFile(path.join(__dirname, 'toReview.txt'), wordStr);
+            await fs.appendFile(path.join(__dirname, 'toReview.txt'), wordStr);
           }
         }
       }

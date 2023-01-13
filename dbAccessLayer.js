@@ -117,14 +117,23 @@ export async function updateStats(username, wordList) {
     conn = await db.getConnection();
     await conn.beginTransaction();
 
-    Object.keys(wordList).forEach(async (word) => {
+    /* Object.keys(wordList).forEach(async (word) => {
       const vocabParams = {
         username,
         word,
       }
   
       await conn.query(vocabQuery, vocabParams);
-    });
+    }); */
+
+    for (const word of Object.keys(wordList)) {
+      const vocabParams = {
+        username,
+        word,
+      };
+  
+      await conn.query(vocabQuery, vocabParams);
+    }
 
     const vocabSize = await conn.query(vocabSizeQuery, vocabSizeParams);
 
@@ -146,8 +155,10 @@ export async function updateStats(username, wordList) {
     } 
   } finally {
     if (conn) {
+      
       await conn.commit();
       await conn.release();
+      console.log('committing transaction finished')
     }
   }
 };
@@ -201,7 +212,7 @@ export async function getVocab(data) {
       list,
     };
   } catch (error) {
-    console.log(err);
+    console.log(error);
     if (conn) await conn.rollback();
   } finally {
     if (conn) await conn.release();

@@ -336,13 +336,12 @@ apiRouter.get('/stats', async (req, res) => {
   req.session.timestamp = Date.now();
 
   const user = await dbModel.getUser(req.session.playerId);
-  // const vocabSize = await dbModel.getVocabSize(req.session.playerId);
   res.json({
     username: user.username,
     gamesPlayed: user.gamesPlayed,
-    totalPoints: user.totalPoints,
-    highestScore: user.highestScore,
-    totalWords: user.totalWords,
+    totalPoints: user.totalPoints || 0,
+    highestScore: user.highestScore || 0,
+    totalWords: user.totalWords || 0,
     longestWord: user.longestWord,
     vocabSize: user.vocabSize,
   });
