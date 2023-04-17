@@ -4,17 +4,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const dbConfigLocal = {
-  host: "localhost",
-  user: "adbmin",
-  password: "AbI35RicV5LSHm1A",
-  database: "wordlist",
-  multipleStatements: false,
-  namedPlaceholders: true,
-  connectionLimit: 10,
-};
-
-const dbConfigOnline = {
+const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -25,8 +15,7 @@ const dbConfigOnline = {
   connectionLimit: 4,
 };
 
-const dbConfig = process.env.IS_ONLINE ? dbConfigOnline : dbConfigLocal;
-
 const db = await mysql.createPool(dbConfig);
+console.log('db connected:', dbConfig.host);
 
 export default db;
