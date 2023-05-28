@@ -12,6 +12,10 @@ const dbConfig = {
   multipleStatements: false,
   namedPlaceholders: true,
   connectionLimit: 4,
+  ssl: {
+    minVersion: 'TLSv1.2',
+    rejectUnauthorized: true
+  },
 };
 
 const db = await mysql.createPool(dbConfig);
