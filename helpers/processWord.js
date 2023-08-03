@@ -18,7 +18,6 @@ export default async function processWord(word) {
 
     const isWordInOnlineDict = await checkWordInOnlineDict(word);
     if (isWordInOnlineDict) {
-      console.log(`word "${word}" in online dict`, isWordInOnlineDict);
       const [dbResult] = await dbModel.addWord(word);
       return true;
     }

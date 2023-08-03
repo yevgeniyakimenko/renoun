@@ -1,8 +1,8 @@
-import fs from 'fs/promises';
 import path from 'path';
 import url from 'url';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { addCandidateWord } from '../dbAccessLayer.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +18,6 @@ export async function checkWordInOnlineDict(word) {
   const learnerQuery = `${learnerURL}${word}?key=${learnerKey}`;
   const thesQuery = `${thesURL}${word}?key=${thesKey}`;
   const freeQuery = `${freeURL}${word}`;
-
   try {
     // check Learner's
     const learnArr = await axios.get(learnerQuery);
@@ -26,9 +25,14 @@ export async function checkWordInOnlineDict(word) {
       // res.hwi contains headword information
       // res.hwi.hw contains the headword, which may be split with '*' denoting the stressed syllable
       // res.fl contains the part of speech
-      if (res.hwi && res.hwi.hw.split('*').join('') === word && res.fl && res.fl === 'noun') {
+      if (
+        res.hwi 
+        && res.fl 
+        && res.fl === 'noun'
+        && res.hwi.hw.split('*').join('') === word 
+      ) {
         let plural = false;
-        // check sls (subject status label) whether the word is only a plural form
+        // check sls (subject status label) whether the word is plural form only
         if (res.sls) {
           const slsArr = res.sls;
           for (const sl of slsArr) {
@@ -49,7 +53,6 @@ export async function checkWordInOnlineDict(word) {
           return false;
         }
 
-        console.log('learners true');
         return true;
       }
     }
@@ -58,7 +61,12 @@ export async function checkWordInOnlineDict(word) {
     const thesArr = await axios.get(thesQuery);
 
     for (const res of thesArr.data) {
-      if (res.hwi && res.hwi.hw === word && res.fl && res.fl === 'noun') {
+      if (
+        res.hwi 
+        && res.hwi.hw === word 
+        && res.fl 
+        && res.fl === 'noun'
+      ) {
         let plural = false;
         // check sls (subject status label) whether the word is only a plural form
         if (res.sls) {
@@ -81,38 +89,43 @@ export async function checkWordInOnlineDict(word) {
           return false;
         }
 
-        console.log('thesaurus true');
         return true;
       }
     }
 
     // Free Dictionary results are less reliable, put matches into manual review
-    const freeArr = await axios.get(freeQuery, {
+    const freeRes = await axios.get(freeQuery, {
       validateStatus: function (status) {
         return (status >= 200 && status < 300) || status === 404; // default
       },
 
     });
 
-    if (!(Array.isArray(freeArr.data))) {
+    if (!(Array.isArray(freeRes.data))) {
       return false;
     }
 
-    for (const res of freeArr.data) {
+    const defArr = [];
+    for (const res of freeRes.data) {
       if (res.word && res.word === word) {
-        const meanings = res.meanings;
+        const { meanings } = res;
         for (const meaning of meanings) {
           if (meaning.partOfSpeech === 'noun') {
-            const defArr = [];
-            const definitions = meaning.definitions;
-            for (const definition of definitions) {
-              defArr.push(definition.definition);
+            const { definitions } = meaning;
+            for (const item of definitions) {
+              defArr.push(item.definition);
             }
-            const wordStr = word + '\n' + defArr.join('\n') + '\n\n';
-            await fs.appendFile(path.join(__dirname, 'toReview.txt'), wordStr);
           }
         }
       }
+    }
+
+    // add to a special table for review
+    if (defArr.length) {
+      await addCandidateWord({
+        word: word,
+        definitions: defArr.join('\n')
+      });
     }
 
     return false;

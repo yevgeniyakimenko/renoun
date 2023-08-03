@@ -241,3 +241,14 @@ export async function addWordsToVocab(username, wordList) {
     if (conn) await conn.release();
   }
 };
+
+export async function addCandidateWord({word, definitions}) {
+  const sqlQuery = "INSERT INTO candidate_word (cdt_word_entry, cdt_definition) VALUES(:word, :definitions);";
+  const params = {
+    word,
+    definitions,
+  };
+
+  const answer = await db.query(sqlQuery, params);
+  return answer;
+};
